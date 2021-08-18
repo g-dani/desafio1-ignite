@@ -6,38 +6,53 @@ import { Task, TasksList } from '../components/TasksList';
 import { TodoInput } from '../components/TodoInput';
 
 export function Home() {
-  const [tasks, setTasks] = useState<Task[]>([]);
+   const [tasks, setTasks] = useState<Task[]>([]);
 
-  function handleAddTask(newTaskTitle: string) {
-    //TODO - add new task
-  }
+   function handleAddTask(newTaskTitle: string) {
+      const newTask = {
+         id: String(new Date().getTime()),
+         title: newTaskTitle,
+         done: false
+      }
+      setTasks(oldTasks => [...oldTasks, newTask]);
+      //TODO - add new task
+   }
 
-  function handleToggleTaskDone(id: number) {
-    //TODO - toggle task done if exists
-  }
+   function handleToggleTaskDone(id: number) {
+      const updatedTasks = tasks.map(task => ({ ...task }))
+      const foundItem = updatedTasks.find(item => item.id === id);
 
-  function handleRemoveTask(id: number) {
-    //TODO - remove task from state
-  }
+      if (!foundItem)
+         return;
 
-  return (
-    <View style={styles.container}>
-      <Header tasksCounter={tasks.length} />
+      foundItem.done = !foundItem.done;
+      setTasks(updatedTasks);
+      //TODO - toggle task done if exists
+   }
 
-      <TodoInput addTask={handleAddTask} />
+   function handleRemoveTask(id: number) {
+      setTasks(oldState => oldState.filter(task => task.id !== id));
+      //TODO - remove task from state
+   }
 
-      <TasksList 
-        tasks={tasks} 
-        toggleTaskDone={handleToggleTaskDone}
-        removeTask={handleRemoveTask} 
-      />
-    </View>
-  )
+   return (
+      <View style={styles.container}>
+         <Header tasksCounter={tasks.length} />
+
+         <TodoInput addTask={handleAddTask} />
+
+         <TasksList
+            tasks={tasks}
+            toggleTaskDone={handleToggleTaskDone}
+            removeTask={handleRemoveTask}
+         />
+      </View>
+   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#EBEBEB'
-  }
+   container: {
+      flex: 1,
+      backgroundColor: '#EBEBEB'
+   }
 })
